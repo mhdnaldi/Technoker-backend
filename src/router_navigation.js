@@ -1,9 +1,9 @@
-const route = require('express').Router()
+const route = require("express").Router();
 
-// import routes
-const reqruiter = require('./routes/r_reqruiter')
+const reqruiter = require('./routes/r_reqruiter');
+const user = require("./routes/r_worker");
 
-// buat middle 
-route.use('/reqruiter', reqruiter)
+route.use('/reqruiter', reqruiter);
+route.use("/user", user);
 
-module.exports = route
+module.exports = route;
