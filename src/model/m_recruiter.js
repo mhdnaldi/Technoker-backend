@@ -1,22 +1,22 @@
 const connection = require('../config/mysql')
 
 module.exports = {
-    checkReqruiter: (email) => {
+    checkRecruiter: (email) => {
         return new Promise((resolve, reject) => {
-            connection.query('SELECT * FROM reqruiter WHERE reqruiter_email = ?', email, (error, result) => {
+            connection.query('SELECT * FROM recruiter WHERE recruiter_email = ?', email, (error, result) => {
                 !error ? resolve(result) : reject(new Error(error))
             })
         })
     },
-    postReqruiter: (data) => {
+    postRecruiter: (data) => {
     	return new Promise((resolve, reject) => {
-    		connection.query('INSERT INTO reqruiter SET ?', data, (error, result) => {
+    		connection.query('INSERT INTO recruiter SET ?', data, (error, result) => {
                 if (!error) {
                     const newResult = {
-                        reqruiter_id: result.insertId,
+                        recruiter_id: result.insertId,
                         ...data
                     }
-                    delete newResult.reqruiter_password
+                    delete newResult.recruiter_password
                     resolve(newResult)
                 } else {
                     reject(new Error(error))
