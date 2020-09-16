@@ -23,5 +23,26 @@ module.exports = {
                 }
             })
     	})
+    },
+    updateRecruiterKey: (key, id) => {
+        return new Promise((resolve, reject) => {
+            connection.query('Update recruiter SET recruiter_key =  ? WHERE recruiter_id = ?', [key, id], (error, result) => {
+                !error ? resolve(result) : reject(new Error(error))
+            })
+        })
+    },
+    checkKey: (key) => {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM recruiter WHERE recruiter_key = ?', key, (error, result) => {
+                !error ? resolve(result) : reject(new Error(error))
+            })
+        })
+    },
+    patchRecruiter: (data, id) => {
+        return new Promise((resolve, reject) => {
+            connection.query('Update recruiter SET ? WHERE recruiter_id = ?', [data, id], (error, result) => {
+                !error ? resolve(result) : reject(new Error(error))
+            })
+        })
     }
  }
