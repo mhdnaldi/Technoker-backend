@@ -9,6 +9,9 @@ const {
   patchUser,
   getWorkerById,
   patchDataWorker,
+  getWorker,
+  getWorkerCount,
+  getWrokerSkills,
 } = require("../model/m_worker");
 const nodemailer = require("nodemailer");
 
@@ -211,8 +214,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      console.log(error);
-      // return helper.response(response, 400, "Bad Request", error);
+      return helper.response(response, 400, "Bad Request", error);
     }
   },
   patchDataWorker: async (request, response) => {
@@ -269,8 +271,46 @@ module.exports = {
         }
       }
     } catch (error) {
-      console.log(error);
-      // return helper.response(response, 400, "Bad Request");
+      return helper.response(response, 400, "Bad Request");
+    }
+  },
+  getAllWorker: async (request, response) => {
+    let { page, limit, orderBy } = request.query;
+    page = page == undefined ? 1 : parseInt(page);
+    limit = limit == undefined ? 9 : parseInt(limit);
+    orderBy = orderBy == undefined ? "user_name ASC" : orderBy;
+
+    const totalData = await getWorkerCount();
+    const totalPage = Math.ceil(totalData / limit);
+    let offset = page * limit - limit;
+
+    let prevLink = helper.getPrevLink(page, request.query);
+    let nextLink = helper.getNextLink(page, totalPage, request.query);
+
+    const pageInfo = {
+      page,
+      totalPage,
+      limit,
+      totalData,
+      orderBy,
+      prevLink: prevLink && `http://127.0.0.1:4000/user?${prevLink}`,
+      nextLink: nextLink && `http://127.0.0.1:4000/user?${nextLink}`,
+    };
+
+    try {
+      const result = await getWorker(orderBy, limit, offset);
+      for (let i = 0; i < result.length; i++) {
+        result[i].skills = await getWrokerSkills(result[i].user_id);
+      }
+      return helper.response(
+        response,
+        200,
+        "Success Get Worker",
+        result,
+        pageInfo
+      );
+    } catch (error) {
+      return helper.response(response, 400, "Bad Request", error);
     }
   },
 };

@@ -6,10 +6,13 @@ const {
   updatePassword,
   getWorkerById,
   patchDataWorker,
+  getAllWorker,
 } = require("../controller/c_worker");
 const upload = require("../middleware/multer_worker");
+const { authorizationRecruiter, authorization } = require("../middleware/auth");
 
 router.get("/:id", getWorkerById);
+router.get("/", authorizationRecruiter, getAllWorker);
 router.post("/login", loginUser);
 router.post("/register", registerUser);
 router.post("/forgot", forgotPassword);
