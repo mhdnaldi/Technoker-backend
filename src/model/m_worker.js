@@ -68,7 +68,6 @@ module.exports = {
         id,
         (error, result) => {
           if (!error) {
-            console.log(result);
             delete result[0].user_password;
             resolve(result);
           } else {
@@ -107,7 +106,7 @@ module.exports = {
           delete newResult.user_password;
           resolve(newResult);
         } else {
-          console.log(error);
+          reject(new Error(error))
         }
       });
     });
@@ -183,7 +182,7 @@ module.exports = {
       );
     });
   },
-  getWrokerSkills: (id) => {
+  getWorkerSkills: (id) => {
     return new Promise((resolve, reject) => {
       connection.query(
         "SELECT * FROM skill WHERE user_id = ?",

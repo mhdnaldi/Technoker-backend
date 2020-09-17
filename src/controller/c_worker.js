@@ -11,8 +11,10 @@ const {
   patchDataWorker,
   getWorker,
   getWorkerCount,
-  getWrokerSkills,
+  getWorkerSkills,
 } = require("../model/m_worker");
+const { getPortofolioById } = require("../model/m_portofolio");
+const { getExperienceById } = require("../model/m_experience");
 const nodemailer = require("nodemailer");
 
 module.exports = {
@@ -199,6 +201,13 @@ module.exports = {
     try {
       const { id } = request.params;
       const result = await getWorkerById(id);
+      const skills = await getWorkerSkills(id)
+      const portofolio = await getPortofolioById(id)
+      const experience = await getExperienceById(id)
+      result[0].skills = skills
+      result[0].portofolio = portofolio
+      result[0].experience = experience
+
       if (result.length > 0) {
         return helper.response(
           response,
@@ -300,7 +309,7 @@ module.exports = {
     try {
       const result = await getWorker(orderBy, limit, offset);
       for (let i = 0; i < result.length; i++) {
-        result[i].skills = await getWrokerSkills(result[i].user_id);
+        result[i].skills = await getWorkerSkills(result[i].user_id);
       }
       return helper.response(
         response,
