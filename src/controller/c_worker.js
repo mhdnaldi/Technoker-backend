@@ -8,7 +8,8 @@ const {
   checkKey,
   patchUser,
   getWorker,
-  getWorkerCount
+  getWorkerCount,
+  getWrokerSkills
 } = require("../model/m_worker");
 const nodemailer = require("nodemailer");
 
@@ -213,6 +214,9 @@ module.exports = {
 
         try {
             const result = await getWorker(orderBy, limit, offset)
+            for (let i = 0; i < result.length; i++) {
+              result[i].skills = await getWrokerSkills(result[i].user_id)
+            }
             const newResult = { result, pagination: pageInfo }
             return helper.response(response, 200, "Success Get Worker", result, pageInfo)
         } catch (error) {
