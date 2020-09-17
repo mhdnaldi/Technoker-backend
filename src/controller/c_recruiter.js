@@ -173,5 +173,10 @@ module.exports = {
             return helper.response(response, 400, "Bad Request", e)
         }
 
+    },
+    patchRecruiter: async (request, response) => {
+        console.log(request.body)
+        console.log(request.params)
+        console.log(request.file)
     }
 }

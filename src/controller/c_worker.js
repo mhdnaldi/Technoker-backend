@@ -208,8 +208,8 @@ module.exports = {
             limit,
             totalData,
             orderBy,
-            prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
-            nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
+            prevLink: prevLink && `http://127.0.0.1:3000/user?${prevLink}`,
+            nextLink: nextLink && `http://127.0.0.1:3000/user?${nextLink}`
         }
 
         try {
