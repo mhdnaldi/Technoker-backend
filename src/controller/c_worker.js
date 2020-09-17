@@ -7,6 +7,8 @@ const {
   updateKeys,
   checkKey,
   patchUser,
+  getWorker,
+  getWorkerCount
 } = require("../model/m_worker");
 const nodemailer = require("nodemailer");
 
@@ -186,4 +188,36 @@ module.exports = {
       return helper.response(response, 400, "Bad Request");
     }
   },
+  getAllWorker: async (request, response) => {
+    let { page, limit, orderBy } = request.query
+        page = page == undefined ? 1 : parseInt(page)
+        limit = limit == undefined ? 9 : parseInt(limit)
+        orderBy = orderBy == undefined ? 'user_name ASC' : orderBy
+
+        const totalData = await getWorkerCount()
+        const totalPage = Math.ceil(totalData / limit)
+        let offset = page * limit - limit
+
+        let prevLink = helper.getPrevLink(page, request.query)
+        let nextLink = helper.getNextLink(page, totalPage, request.query)
+
+        const pageInfo = {
+            page,
+            totalPage,
+            limit,
+            totalData,
+            orderBy,
+            prevLink: prevLink && `http://127.0.0.1:3000/product?${prevLink}`,
+            nextLink: nextLink && `http://127.0.0.1:3000/product?${nextLink}`
+        }
+
+        try {
+            const result = await getWorker(orderBy, limit, offset)
+            const newResult = { result, pagination: pageInfo }
+            return helper.response(response, 200, "Success Get Worker", result, pageInfo)
+        } catch (error) {
+            console.log(error)
+            return helper.response(response, 400, "Bad Request", error)
+        }
+  }
 };

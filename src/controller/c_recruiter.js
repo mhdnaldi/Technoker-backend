@@ -169,6 +169,7 @@ module.exports = {
                 return helper.response(response, 400, "Access Danied")
             }
         } catch (e) {
+        	console.log(e)
             return helper.response(response, 400, "Bad Request", e)
         }
 
