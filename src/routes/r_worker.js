@@ -4,10 +4,11 @@ const {
   loginUser,
   forgotPassword,
   updatePassword,
-  getAllWorker
+  getAllWorker,
+  postPortofolio
 } = require("../controller/c_worker");
 
-const { authorizationRecruiter } = require('../middleware/auth')
+const { authorizationRecruiter, authorization, } = require('../middleware/auth')
 router.get("/", authorizationRecruiter, getAllWorker)
 router.post("/login", loginUser);
 router.post("/register", registerUser);
