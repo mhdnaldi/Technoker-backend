@@ -12,7 +12,7 @@ module.exports = {
           delete newResult.user_password;
           resolve(newResult);
         } else {
-          console.log(error);
+          reject(new Error(error));
         }
       });
     });
@@ -57,6 +57,41 @@ module.exports = {
         [data, id],
         (error, result) => {
           !error ? resolve(result) : reject(new Error());
+        }
+      );
+    });
+  },
+  getWorkerById: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT * FROM user WHERE user_id = ?",
+        id,
+        (error, result) => {
+          if (!error) {
+            console.log(result);
+            delete result[0].user_password;
+            resolve(result);
+          } else {
+            reject(new Error(error));
+          }
+        }
+      );
+    });
+  },
+  patchDataWorker: (data, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE user SET ? WHERE user_id = ?`,
+        [data, id],
+        (error, result) => {
+          if (!error) {
+            const newResult = {
+              ...data,
+            };
+            resolve(newResult);
+          } else {
+            reject(new Error(error));
+          }
         }
       );
     });

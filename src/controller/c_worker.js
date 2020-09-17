@@ -7,6 +7,8 @@ const {
   updateKeys,
   checkKey,
   patchUser,
+  getWorkerById,
+  patchDataWorker,
 } = require("../model/m_worker");
 const nodemailer = require("nodemailer");
 
@@ -82,6 +84,8 @@ module.exports = {
             user_job_desk,
             user_location,
             user_image,
+            user_instagram,
+            user_github,
             user_about,
           } = checkDataUser[0];
           let payload = {
@@ -94,6 +98,8 @@ module.exports = {
             user_job_desk,
             user_location,
             user_image,
+            user_instagram,
+            user_github,
             user_about,
           };
           const token = jwt.sign(payload, "SECRET", { expiresIn: "1h" });
@@ -184,6 +190,87 @@ module.exports = {
       }
     } catch (error) {
       return helper.response(response, 400, "Bad Request");
+    }
+  },
+  getWorkerById: async (request, response) => {
+    try {
+      const { id } = request.params;
+      const result = await getWorkerById(id);
+      if (result.length > 0) {
+        return helper.response(
+          response,
+          200,
+          `Success Get Worker By ID: ${id}`,
+          result
+        );
+      } else {
+        return helper.response(
+          response,
+          400,
+          `Worker By ID: ${id} is not found`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      // return helper.response(response, 400, "Bad Request", error);
+    }
+  },
+  patchDataWorker: async (request, response) => {
+    try {
+      const { id } = request.params;
+      const {
+        user_name,
+        user_phone,
+        user_job_desk,
+        user_location,
+        user_about,
+        user_instagram,
+        user_github,
+      } = request.body;
+      const profileImage = request.file;
+      const updateData = {
+        user_name,
+        user_phone,
+        user_job_desk,
+        user_location,
+        user_about,
+        user_instagram,
+        user_github,
+        user_updated_at: new Date(),
+      };
+      if (user_name === "") {
+        return helper.response(response, 400, "Name cannot be empty");
+      } else if (user_phone === "") {
+        return helper.response(response, 400, "Phone cannot be empty");
+      } else if (user_job_desk === "") {
+        return helper.response(response, 400, "Job desk cannot be empty");
+      } else if (user_location === "") {
+        return helper.response(response, 400, "Location cannot be empty");
+      } else if (user_about === "") {
+        return helper.response(response, 400, "Work place cannot be empty");
+      } else {
+        if (profileImage === "" || profileImage === undefined) {
+          const result = await patchDataWorker(updateData, id);
+          return helper.response(
+            response,
+            200,
+            "Data successfully updated",
+            result
+          );
+        } else {
+          updateData.user_image = profileImage.filename;
+          const result = await patchDataWorker(updateData, id);
+          return helper.response(
+            response,
+            200,
+            "Data successfully updated",
+            result
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      // return helper.response(response, 400, "Bad Request");
     }
   },
 };
