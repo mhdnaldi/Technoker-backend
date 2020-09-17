@@ -22,9 +22,7 @@ module.exports = {
       const result = await postPortofolio(setData)
       return helper.response(response, 201, "Seuccess post portofolio", result)
     } catch(e) {
-    	console.log(e)
     	return helper.response(response, 400, "Bad request", e)
     }
-
-  }
+  },
 }
