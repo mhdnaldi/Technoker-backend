@@ -24,7 +24,7 @@ const fileFilter = (request, file, callback) => {
 
 const limits = { fileSize: 1024 * 1024 * 1 }
 
-let upload = multer({ storage, fileFilter, limits }).single('portofolio_image')
+let upload = multer({ storage, fileFilter, limits }).single('recruiter_profile_image')
 
 const uploadFilter = (request, response, next) => {
     upload(request, response, (err) => {

@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt')
 const helper = require('../helper/helper')
 const jwt = require('jsonwebtoken')
-const { checkRecruiter, postRecruiter, updateRecruiterKey, checkKey, patchRecruiter } = require('../model/m_recruiter')
+const fs = require('fs')
+
+const { checkRecruiter, checkRecruiterById, postRecruiter, updateRecruiterKey, checkKey, patchRecruiter } = require('../model/m_recruiter')
 
 module.exports = {
     registerrecruiter: async (request, response) => {
@@ -148,8 +150,8 @@ module.exports = {
 
         try {
 
-        	if (recruiter_password.length < 7 || recruiter_password.length > 20) {
-                return helper.response(response, 403, "Password must be between 8 to 20 characters")            
+            if (recruiter_password.length < 7 || recruiter_password.length > 20) {
+                return helper.response(response, 403, "Password must be between 8 to 20 characters")
             } else if (recruiter_password !== recruiter_password_confirmation) {
                 return helper.response(response, 400, "Your password don't match!")
             }
@@ -157,11 +159,11 @@ module.exports = {
             const checkData = await checkKey(recruiter_key)
 
             if (checkData.length > 0) {
-	         	const id = checkData[0].recruiter_id
-            	const  setData = {
-            		recruiter_password: encryptPassword,
-            		recruiter_key: null
-            	}
+                const id = checkData[0].recruiter_id
+                const setData = {
+                    recruiter_password: encryptPassword,
+                    recruiter_key: null
+                }
                 const updateKey = await patchRecruiter(setData, id)
 
                 return helper.response(response, 200, "Success, your password has been changed")
@@ -169,14 +171,61 @@ module.exports = {
                 return helper.response(response, 400, "Access Danied")
             }
         } catch (e) {
-        	console.log(e)
+            console.log(e)
             return helper.response(response, 400, "Bad Request", e)
         }
 
     },
     patchRecruiter: async (request, response) => {
-        console.log(request.body)
-        console.log(request.params)
-        console.log(request.file)
+        const { id } = request.params
+        const { recruiter_company, recruiter_field, recruiter_location, recruiter_about, recruiter_email, recruiter_instagram, recruiter_phone, recruiter_linkedin } = request.body
+        const recruiter_profile_image = request.file
+        try {
+            if (
+                recruiter_company == '' || recruiter_company == undefined ||
+                recruiter_field == '' || recruiter_field == undefined ||
+                recruiter_location == '' || recruiter_location == undefined ||
+                recruiter_about == '' || recruiter_about == undefined ||
+                recruiter_email == '' || recruiter_email == undefined ||
+                recruiter_instagram == '' || recruiter_instagram == undefined ||
+                recruiter_email == '' || recruiter_email == undefined ||
+                recruiter_phone == '' || recruiter_phone == undefined
+            ) {
+                return helper.response(response, 400, "The data you've entered is not complete!")
+            }
+            let setData = {
+                recruiter_company,
+                recruiter_field,
+                recruiter_location,
+                recruiter_about,
+                recruiter_email,
+                recruiter_instagram,
+                recruiter_phone,
+                recruiter_linkedin
+            }
+            const checkData = await checkRecruiterById(id)
+
+            if (checkData.length > 0) {
+                let result = ''
+                if (recruiter_profile_image == undefined || recruiter_profile_image == '') {
+                    setData = setData
+                } else {
+                    setData.recruiter_profile_image = recruiter_profile_image.filename
+                    const image = checkData[0].recruiter_profile_image
+                    if (image !== null) {
+                        fs.unlink(`./uploads/profile/${image}`, function(err) {
+                            if (err) throw err;
+                        })
+                    }
+                }
+                
+                result = await patchRecruiter(setData, id)
+                return helper.response(response, 200, "Recruiter data updated", result)
+            } else {
+                return helper.response(response, 404, `Recruiter with ${id} is not found!`)
+            }
+        } catch (e) {
+            return helper.response(response, 400, "Bad Request", e)
+        }
     }
 }
