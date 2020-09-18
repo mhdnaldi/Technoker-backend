@@ -19,7 +19,7 @@ const {
 } = require("../model/m_worker");
     
 const { getWorkerSkills } = require("../model/m_skill");
-const { getPortofolioById } = require("../model/m_portofolio");
+const { getPortofolioByUserId } = require("../model/m_portofolio");
 const { getExperienceById } = require("../model/m_experience");
 const nodemailer = require("nodemailer");
 
@@ -208,7 +208,7 @@ module.exports = {
             const { id } = request.params;
             const result = await getWorkerByIdV2(id);
             const skills = await getWorkerSkills(id);
-            const portofolio = await getPortofolioById(id);
+            const portofolio = await getPortofolioByUserId(id);
             const experience = await getExperienceById(id);
             result[0].skills = skills;
             result[0].portofolio = portofolio;
