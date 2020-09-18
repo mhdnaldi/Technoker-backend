@@ -8,7 +8,7 @@ module.exports = {
             })
         })
     },
-    checkRecruiterById: (email) => {
+    getRecruiterById: (email) => {
         return new Promise((resolve, reject) => {
             connection.query('SELECT * FROM recruiter WHERE recruiter_id = ?', email, (error, result) => {
                 !error ? resolve(result) : reject(new Error(error))

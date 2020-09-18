@@ -3,7 +3,7 @@ const helper = require('../helper/helper')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 
-const { checkRecruiter, checkRecruiterById, postRecruiter, updateRecruiterKey, checkKey, patchRecruiter } = require('../model/m_recruiter')
+const { checkRecruiter, getRecruiterById, postRecruiter, updateRecruiterKey, checkKey, patchRecruiter } = require('../model/m_recruiter')
 
 module.exports = {
     registerrecruiter: async (request, response) => {
@@ -203,7 +203,7 @@ module.exports = {
                 recruiter_phone,
                 recruiter_linkedin
             }
-            const checkData = await checkRecruiterById(id)
+            const checkData = await getRecruiterById(id)
 
             if (checkData.length > 0) {
                 let result = ''
@@ -218,7 +218,7 @@ module.exports = {
                         })
                     }
                 }
-                
+
                 result = await patchRecruiter(setData, id)
                 return helper.response(response, 200, "Recruiter data updated", result)
             } else {
@@ -226,6 +226,19 @@ module.exports = {
             }
         } catch (e) {
             return helper.response(response, 400, "Bad Request", e)
+        }
+    },
+    getRecruiterById: async (request, response) => {
+        const { id } = request.params
+        try {
+            result = await getRecruiterById(id)
+            if (result.length > 0) {
+                return helper.response(response, 200, `Success get recruiter by Id ${id}`, result)
+            } else {
+                return helper.response(response, 404, `Recruiter by Id ${id} not Found`)
+            }
+        } catch (e) {
+            return helper.response(response, 400, "Bad Request", e);
         }
     }
 }
