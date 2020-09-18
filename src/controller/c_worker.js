@@ -9,14 +9,16 @@ const {
     checkKey,
     patchUser,
     getWorkerById,
+    getWorkerByIdV2,
     patchDataWorker,
     getWorker,
     getWorkerCount,
-    getWorkerSkills,
     searchWorkerByName,
     countJobType,
     getWorkerByJobType
 } = require("../model/m_worker");
+    
+const { getWorkerSkills } = require("../model/m_skill");
 const { getPortofolioById } = require("../model/m_portofolio");
 const { getExperienceById } = require("../model/m_experience");
 const nodemailer = require("nodemailer");
@@ -243,7 +245,7 @@ module.exports = {
                 user_github,
             } = request.body;
             const profileImage = request.file;
-            const updateData = {
+            let updateData = {
                 user_name,
                 user_phone,
                 user_job_desk,
@@ -263,39 +265,27 @@ module.exports = {
                 return helper.response(response, 400, "Location cannot be empty");
             } else if (user_about === "") {
                 return helper.response(response, 400, "Work place cannot be empty");
-            } else {
-                const checkId = await getWorkerById(id);
-                if (checkId.length > 0) {
-                    console.log(checkId);
+            }
+
+            const checkId = await getWorkerByIdV2(id);
+            if (checkId.length > 0) {
+                if (profileImage === "" || profileImage === undefined) {
+                    updateData = updateData;
+                } else {
+                    updateData.user_image = profileImage.filename;
                     if (checkId[0].user_image !== null) {
                         fs.unlink(
                             `./uploads/profile/${checkId[0].user_image}`,
                             async (error) => {
-                                if (error) {
-                                    throw error;
-                                }
+                                if (error) throw err;
                             }
                         );
                     }
                 }
-                if (profileImage === "" || profileImage === undefined) {
-                    const result = await patchDataWorker(updateData, id);
-                    return helper.response(
-                        response,
-                        200,
-                        "Data successfully updated",
-                        result
-                    );
-                } else {
-                    updateData.user_image = profileImage.filename;
-                    const result = await patchDataWorker(updateData, id);
-                    return helper.response(
-                        response,
-                        200,
-                        "Data successfully updated",
-                        result
-                    );
-                }
+                const result = await patchDataWorker(updateData, id);
+                return helper.response(response, 200, "Data successfully updated", result);
+            } else {
+              return helper.response(response, 200,  `Worker by Id ${id} not found!`);
             }
         } catch (error) {
             return helper.response(response, 400, "Bad Request");
@@ -326,6 +316,23 @@ module.exports = {
             const totalPage = Math.ceil(totalData / limit);
             let prevLink = helper.getPrevLink(page, request.query);
             let nextLink = helper.getNextLink(page, totalPage, request.query);
+
+            const pageInfo = {
+                page,
+                totalPage,
+                limit,
+                totalData,
+                orderBy,
+                prevLink: prevLink && `http://127.0.0.1:4000/user?${prevLink}`,
+                nextLink: nextLink && `http://127.0.0.1:4000/user?${nextLink}`,
+            };
+            return helper.response(
+                response,
+                200,
+                "Success Get Worker",
+                result,
+                pageInfo
+            );
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error);
         }
@@ -335,9 +342,13 @@ module.exports = {
         str = `LIKE '%${name}%'`;
         try {
             let result = await searchWorkerByName(str);
-            return helper.response(response, 200, "Success Get Data Worker", result);
+            if (result.length > 0) {
+                return helper.response(response, 200, "Success Get Data Worker", result);
+            } else {
+                return helper.response(response, 404, "Worker not found!");
+            }
         } catch (error) {
-            console.log(error);
+            return helper.response(response, 200, "Bad request", error);
         }
     },
 };

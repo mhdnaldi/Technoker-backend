@@ -77,6 +77,17 @@ module.exports = {
             );
         });
     },
+    getWorkerByIdV2: (id) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                "SELECT * FROM user WHERE user_id = ?",
+                id,
+                (error, result) => {
+                    !error ? resolve(result) : reject(new Error(error))
+                }
+            );
+        });
+    },
     patchDataWorker: (data, id) => {
         return new Promise((resolve, reject) => {
             connection.query(
@@ -116,17 +127,6 @@ module.exports = {
         return new Promise((resolve, reject) => {
             connection.query(
                 `SELECT * FROM user ORDER BY ${order} LIMIT ${limit} OFFSET ${offset}`,
-                (error, result) => {
-                    !error ? resolve(result) : reject(new Error(error));
-                }
-            );
-        });
-    },
-    getWorkerSkills: (id) => {
-        return new Promise((resolve, reject) => {
-            connection.query(
-                "SELECT * FROM skill WHERE user_id = ?",
-                id,
                 (error, result) => {
                     !error ? resolve(result) : reject(new Error(error));
                 }
