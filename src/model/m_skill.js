@@ -48,7 +48,7 @@ module.exports = {
   checkWorkerSkill : (skill_name, id) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "SELECT * FROM skill WHERE skill_name = ? AND user_id = ?", [skill_name, id], (error, result) => {
+        `SELECT * FROM skill WHERE skill_name LIKE '${skill_name}' AND user_id = ${id}`, (error, result) => {
           !error ? resolve(result) : reject(new Error(error));
         }
       )

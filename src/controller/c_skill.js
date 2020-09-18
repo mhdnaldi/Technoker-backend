@@ -40,7 +40,6 @@ module.exports = {
         try {
             const { id } = request.params;
             const result = await deleteSkill(id);
-            console.log(result)
             return helper.response(response, 200, "Skill deleted", result);
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error);
