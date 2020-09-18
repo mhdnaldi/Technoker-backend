@@ -1,6 +1,6 @@
 const connection = require("../config/mysql");
 
-module.exports = {
+module.exports = { 
     postUser: (setData) => {
         return new Promise((resolve, reject) => {
             connection.query("INSERT INTO user SET ?", setData, (error, result) => {
@@ -146,5 +146,15 @@ module.exports = {
                 !error ? resolve(result[0].total) : reject(new Error(error))
             })
         })
-    }
+    },
+    searchWorkerByName: (search) => {
+        return new Promise((resolve, reject) => {
+            connection.query(
+                `SELECT * FROM user WHERE user_name ${search}`,
+                (error, result) => {
+                    !error ? resolve(result) : reject(new Error(error));
+                }
+            );
+        });
+    },
 };

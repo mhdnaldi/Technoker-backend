@@ -7,10 +7,12 @@ const {
   getWorkerById,
   patchDataWorker,
   getAllWorker,
+  getWorkerByName,
 } = require("../controller/c_worker");
 const upload = require("../middleware/multer_worker");
 const { authorizationRecruiter, authorization } = require("../middleware/auth");
 
+router.get("/search", authorization, getWorkerByName);
 router.get("/:id", authorization, getWorkerById);
 router.get("/", authorizationRecruiter, getAllWorker);
 router.post("/login", loginUser);

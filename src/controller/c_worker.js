@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const helper = require("../helper/helper");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const {
     checkUser,
     postUser,
@@ -12,6 +13,7 @@ const {
     getWorker,
     getWorkerCount,
     getWorkerSkills,
+    searchWorkerByName,
     countJobType,
     getWorkerByJobType
 } = require("../model/m_worker");
@@ -147,7 +149,7 @@ module.exports = {
                         from: '"Technoker Team" <info.technoker@gmail.com>',
                         to: user_email,
                         subject: "Technoker - Forgot Password",
-                        html: `<p>Your code is <b>${keys}</b></p>`,
+                        html: ``,
                     }),
                     function(err) {
                         if (err) {
@@ -156,10 +158,10 @@ module.exports = {
                     };
                 return helper.response(response, 200, "Email has been sent");
             } else {
-                return helper.response(repsonse, 400, "Password wrong");
+                return helper.response(response, 400, "Password wrong");
             }
         } catch (error) {
-            return helper.response(repsonse, 400, "Bad Request");
+            return helper.response(response, 400, "Bad Request");
         }
     },
     updatePassword: async (request, response) => {
@@ -203,12 +205,12 @@ module.exports = {
         try {
             const { id } = request.params;
             const result = await getWorkerById(id);
-            const skills = await getWorkerSkills(id)
-            const portofolio = await getPortofolioById(id)
-            const experience = await getExperienceById(id)
-            result[0].skills = skills
-            result[0].portofolio = portofolio
-            result[0].experience = experience
+            const skills = await getWorkerSkills(id);
+            const portofolio = await getPortofolioById(id);
+            const experience = await getExperienceById(id);
+            result[0].skills = skills;
+            result[0].portofolio = portofolio;
+            result[0].experience = experience;
 
             if (result.length > 0) {
                 return helper.response(
@@ -262,6 +264,20 @@ module.exports = {
             } else if (user_about === "") {
                 return helper.response(response, 400, "Work place cannot be empty");
             } else {
+                const checkId = await getWorkerById(id);
+                if (checkId.length > 0) {
+                    console.log(checkId);
+                    if (checkId[0].user_image !== null) {
+                        fs.unlink(
+                            `./uploads/profile/${checkId[0].user_image}`,
+                            async (error) => {
+                                if (error) {
+                                    throw error;
+                                }
+                            }
+                        );
+                    }
+                }
                 if (profileImage === "" || profileImage === undefined) {
                     const result = await patchDataWorker(updateData, id);
                     return helper.response(
@@ -297,7 +313,6 @@ module.exports = {
             let result = ''
             if (orderBy == 'freelance' || orderBy == 'fulltime') {
                 totalData = await countJobType(orderBy)
-                console.log(totalData)
                 result = await getWorkerByJobType(orderBy, limit, offset);
             } else {
                 totalData = await getWorkerCount();
@@ -307,30 +322,22 @@ module.exports = {
             for (let i = 0; i < result.length; i++) {
                 result[i].skills = await getWorkerSkills(result[i].user_id);
             }
-            
+
             const totalPage = Math.ceil(totalData / limit);
             let prevLink = helper.getPrevLink(page, request.query);
             let nextLink = helper.getNextLink(page, totalPage, request.query);
-
-            const pageInfo = {
-                page,
-                totalPage,
-                limit,
-                totalData,
-                orderBy,
-                prevLink: prevLink && `http://127.0.0.1:4000/user?${prevLink}`,
-                nextLink: nextLink && `http://127.0.0.1:4000/user?${nextLink}`,
-            };
-            return helper.response(
-                response,
-                200,
-                "Success Get Worker",
-                result,
-                pageInfo
-            );
         } catch (error) {
-          console.log(error)
             return helper.response(response, 400, "Bad Request", error);
+        }
+    },
+    getWorkerByName: async (request, response) => {
+        let { name } = request.query;
+        str = `LIKE '%${name}%'`;
+        try {
+            let result = await searchWorkerByName(str);
+            return helper.response(response, 200, "Success Get Data Worker", result);
+        } catch (error) {
+            console.log(error);
         }
     },
 };
