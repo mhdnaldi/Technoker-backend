@@ -39,10 +39,19 @@ module.exports = {
             };
             resolve(newResult);
           } else {
-            console.log(error);
+            reject(new Error(error));
           }
         }
       );
     });
   },
+  checkWorkerSkill : (skill_name, id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "SELECT * FROM skill WHERE skill_name = ? AND user_id = ?", [skill_name, id], (error, result) => {
+          !error ? resolve(result) : reject(new Error(error));
+        }
+      )
+    })
+  } 
 };

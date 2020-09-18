@@ -206,7 +206,7 @@ module.exports = {
     getWorkerById: async (request, response) => {
         try {
             const { id } = request.params;
-            const result = await getWorkerById(id);
+            const result = await getWorkerByIdV2(id);
             const skills = await getWorkerSkills(id);
             const portofolio = await getPortofolioById(id);
             const experience = await getExperienceById(id);
@@ -267,7 +267,7 @@ module.exports = {
                 return helper.response(response, 400, "Work place cannot be empty");
             }
 
-            const checkId = await getWorkerByIdV2(id);
+            const checkId = await getWorkerById(id);
             if (checkId.length > 0) {
                 if (profileImage === "" || profileImage === undefined) {
                     updateData = updateData;
@@ -285,7 +285,7 @@ module.exports = {
                 const result = await patchDataWorker(updateData, id);
                 return helper.response(response, 200, "Data successfully updated", result);
             } else {
-              return helper.response(response, 200,  `Worker by Id ${id} not found!`);
+              return helper.response(response, 404,  `Worker by Id ${id} not found!`);
             }
         } catch (error) {
             return helper.response(response, 400, "Bad Request");

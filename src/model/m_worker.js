@@ -67,12 +67,7 @@ module.exports = {
                 "SELECT * FROM user WHERE user_id = ?",
                 id,
                 (error, result) => {
-                    if (!error) {
-                        delete result[0].user_password;
-                        resolve(result);
-                    } else {
-                        reject(new Error(error));
-                    }
+                    !error ? resolve(result) : reject(new Error(error))
                 }
             );
         });
@@ -83,7 +78,12 @@ module.exports = {
                 "SELECT * FROM user WHERE user_id = ?",
                 id,
                 (error, result) => {
-                    !error ? resolve(result) : reject(new Error(error))
+                    if (!error) {
+                        delete result[0].user_password;
+                        resolve(result);
+                    } else {
+                        reject(new Error(error));
+                    }
                 }
             );
         });
