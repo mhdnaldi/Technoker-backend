@@ -12,7 +12,7 @@ const {
 const upload = require("../middleware/multer_worker");
 const { authorizationRecruiter, authorization } = require("../middleware/auth");
 
-router.get("/:id", getWorkerById);
+router.get("/:id", authorization, getWorkerById);
 router.get("/", authorizationRecruiter, getAllWorker);
 router.get("/search", getWorkerByName);
 router.post("/login", loginUser);

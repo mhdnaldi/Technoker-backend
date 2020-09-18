@@ -8,6 +8,13 @@ module.exports = {
             })
         })
     },
+    getRecruiterById: (email) => {
+        return new Promise((resolve, reject) => {
+            connection.query('SELECT * FROM recruiter WHERE recruiter_id = ?', email, (error, result) => {
+                !error ? resolve(result) : reject(new Error(error))
+            })
+        })
+    },
     postRecruiter: (data) => {
     	return new Promise((resolve, reject) => {
     		connection.query('INSERT INTO recruiter SET ?', data, (error, result) => {
@@ -41,7 +48,15 @@ module.exports = {
     patchRecruiter: (data, id) => {
         return new Promise((resolve, reject) => {
             connection.query('Update recruiter SET ? WHERE recruiter_id = ?', [data, id], (error, result) => {
-                !error ? resolve(result) : reject(new Error(error))
+                if (!error) {
+                    const newResult = {
+                        recruiter_id: id,
+                        ...data
+                    }
+                    resolve(newResult)
+                } else {
+                    reject(new Error(error))
+                }
             })
         })
     }

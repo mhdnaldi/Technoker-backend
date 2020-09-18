@@ -1,12 +1,12 @@
 const connection = require("../config/mysql");
 
 module.exports = {
-    postPortofolio: (data) => {
+    postExperience: (data) => {
         return new Promise((resolve, reject) => {
-            connection.query("INSERT INTO portofolio SET ?", data, (error, result) => {
+            connection.query("INSERT INTO experience SET ?", data, (error, result) => {
                 if (!error) {
                     const newResult = {
-                        portofolio_id: result.insertId,
+                        experience_id: result.insertId,
                         ...data,
                     }
                     resolve(newResult);
@@ -16,9 +16,9 @@ module.exports = {
             })
         })
     },
-    getPortofolioById: (id) => {
+    getExperienceById: (id) => {
         return new Promise((resolve, reject) => {
-            connection.query("SELECT * FROM portofolio WHERE user_id = ?", id, (error, result) => {
+            connection.query("SELECT * FROM experience WHERE user_id = ?", id, (error, result) => {
                     !error ? resolve(result) : reject(new Error(error));
                 }
             );
