@@ -13,6 +13,7 @@ const {
   getWorker,
   getWorkerCount,
   getWorkerSkills,
+  searchWorkerByName,
 } = require("../model/m_worker");
 const { getPortofolioById } = require("../model/m_portofolio");
 const { getExperienceById } = require("../model/m_experience");
@@ -146,7 +147,7 @@ module.exports = {
           from: '"Technoker Team" <info.technoker@gmail.com>',
           to: user_email,
           subject: "Technoker - Forgot Password",
-          html: `<p>Your code is <b>${keys}</b></p>`,
+          html: ``,
         }),
           function (err) {
             if (err) {
@@ -202,12 +203,12 @@ module.exports = {
     try {
       const { id } = request.params;
       const result = await getWorkerById(id);
-      const skills = await getWorkerSkills(id)
-      const portofolio = await getPortofolioById(id)
-      const experience = await getExperienceById(id)
-      result[0].skills = skills
-      result[0].portofolio = portofolio
-      result[0].experience = experience
+      const skills = await getWorkerSkills(id);
+      const portofolio = await getPortofolioById(id);
+      const experience = await getExperienceById(id);
+      result[0].skills = skills;
+      result[0].portofolio = portofolio;
+      result[0].experience = experience;
 
       if (result.length > 0) {
         return helper.response(
@@ -263,7 +264,8 @@ module.exports = {
       } else {
         const checkId = await getWorkerById(id);
         if (checkId.length > 0) {
-          if (checkId[0].user_image !== "" || checkId[0].user_image !== null) {
+          console.log(checkId);
+          if (checkId[0].user_image !== null) {
             fs.unlink(
               `./uploads/profile/${checkId[0].user_image}`,
               async (error) => {
@@ -294,7 +296,8 @@ module.exports = {
         }
       }
     } catch (error) {
-      return helper.response(response, 400, "Bad Request");
+      console.log(error);
+      // return helper.response(response, 400, "Bad Request");
     }
   },
   getAllWorker: async (request, response) => {

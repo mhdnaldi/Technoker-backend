@@ -106,7 +106,7 @@ module.exports = {
           delete newResult.user_password;
           resolve(newResult);
         } else {
-          reject(new Error(error))
+          reject(new Error(error));
         }
       });
     });
@@ -182,21 +182,10 @@ module.exports = {
       );
     });
   },
-  getWorkerSkills: (id) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT * FROM skill WHERE user_id = ?",
-        id,
-        (error, result) => {
-          !error ? resolve(result) : reject(new Error(error));
-        }
-      );
-    });
-  },
   searchWorkerByName: (search) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        `SELECT * FROM user WHERE user_job_desk ${search}`,
+        `SELECT * FROM user WHERE user_name ${search}`,
         (error, result) => {
           !error ? resolve(result) : reject(new Error(error));
         }
