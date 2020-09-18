@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const helper = require("../helper/helper");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const {
   checkUser,
   postUser,
@@ -152,10 +153,10 @@ module.exports = {
           };
         return helper.response(response, 200, "Email has been sent");
       } else {
-        return helper.response(repsonse, 400, "Password wrong");
+        return helper.response(response, 400, "Password wrong");
       }
     } catch (error) {
-      return helper.response(repsonse, 400, "Bad Request");
+      return helper.response(response, 400, "Bad Request");
     }
   },
   updatePassword: async (request, response) => {
@@ -251,6 +252,19 @@ module.exports = {
       } else if (user_about === "") {
         return helper.response(response, 400, "Work place cannot be empty");
       } else {
+        const checkId = await getWorkerById(id);
+        if (checkId.length > 0) {
+          if (checkId[0].user_image !== "" || checkId[0].user_image !== null) {
+            fs.unlink(
+              `./uploads/profile/${checkId[0].user_image}`,
+              async (error) => {
+                if (error) {
+                  throw error;
+                }
+              }
+            );
+          }
+        }
         if (profileImage === "" || profileImage === undefined) {
           const result = await patchDataWorker(updateData, id);
           return helper.response(
@@ -300,7 +314,7 @@ module.exports = {
     try {
       const result = await getWorker(orderBy, limit, offset);
       for (let i = 0; i < result.length; i++) {
-        result[i].skills = await getWrokerSkills(result[i].user_id);
+        result[i].skills = await getWorkerSkills(result[i].user_id);
       }
       return helper.response(
         response,
@@ -311,6 +325,16 @@ module.exports = {
       );
     } catch (error) {
       return helper.response(response, 400, "Bad Request", error);
+    }
+  },
+  getWorkerByName: async (request, response) => {
+    let { name } = request.query;
+    str = `LIKE '%${name}%'`;
+    try {
+      let result = await searchWorkerByName(str);
+      return helper.response(response, 200, "Success Get Data Worker", result);
+    } catch (error) {
+      console.log(error);
     }
   },
 };
