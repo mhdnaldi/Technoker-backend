@@ -106,13 +106,13 @@ module.exports = {
     recruiterForgotPassword: async (request, response) => {
         const nodemailer = require('nodemailer')
         const { recruiter_email } = request.body
-        const key = Math.round(Math.random() * 10000)
+        const key = Math.round(Math.random() * 99999)
 
         try {
             const checkData = await checkRecruiter(recruiter_email)
-            const id = checkData[0].recruiter_id
 
             if (checkData.length >= 1) {
+                const id = checkData[0].recruiter_id
                 const updateKey = await updateRecruiterKey(key, id)
                 let transporter = nodemailer.createTransport({
                     host: "smtp.gmail.com",
@@ -123,11 +123,15 @@ module.exports = {
                         pass: "technoker2020"
                     }
                 })
+                const redirectLink = process.env.FRONTEND_LINK + 'reset-password/1/' + key
                 await transporter.sendMail({
                         from: '"Technoker Team" <info.technoker@gmail.com>',
                         to: recruiter_email,
                         subject: "Technoker - Forgot Password",
-                        html: `Your Code is <b>${key}</b>`
+                        html: `
+                        Click link bellow for redirect to change password page <br /> <a href="${redirectLink}">Click Here</a> 
+                        <p> Or copy this link ${redirectLink} </p>
+                        `
                     }),
                     function(err) {
                         if (err) {
@@ -135,9 +139,9 @@ module.exports = {
                         }
                     }
 
-                return helper.response(response, 200, "Email has been send, Please check your email !")
+                return helper.response(response, 200, "Email has been send, Please check your email")
             } else {
-                return helper.response(response, 400, "Email / Account not registered !")
+                return helper.response(response, 400, "This email is not registered!")
             }
         } catch (error) {
             return helper.response(response, 400, "Bad Request", error)

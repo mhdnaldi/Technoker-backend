@@ -133,10 +133,11 @@ module.exports = {
     forgotPassword: async (request, response) => {
         try {
             const { user_email } = request.body;
-            const keys = Math.round(Math.random() * 10000);
+            const keys = Math.round(Math.random() * 99999);
             const checkDataUser = await checkUser(user_email);
-            const user_id = checkDataUser[0].user_id;
+            
             if (checkDataUser.length >= 1) {
+                const user_id = checkDataUser[0].user_id;
                 const updateKey = await updateKeys(keys, user_id);
                 let transporter = nodemailer.createTransport({
                     host: "smtp.gmail.com",
@@ -147,20 +148,24 @@ module.exports = {
                         pass: "technoker2020",
                     },
                 });
+                const redirectLink = process.env.FRONTEND_LINK + 'reset-password/2/' + keys
                 await transporter.sendMail({
                         from: '"Technoker Team" <info.technoker@gmail.com>',
                         to: user_email,
                         subject: "Technoker - Forgot Password",
-                        html: ``,
+                        html: `
+                        Click link bellow for redirect to change password page <br /> <a href="${redirectLink}">Click Here</a> 
+                        <p> Or copy this link ${redirectLink} </p>
+                        `,
                     }),
                     function(err) {
                         if (err) {
                             return helper.response(response, 400, "Email not sent");
                         }
                     };
-                return helper.response(response, 200, "Email has been sent");
+                return helper.response(response, 200, "Email has been sent, please check your email");
             } else {
-                return helper.response(response, 400, "Password wrong");
+                return helper.response(response, 400, "This email is not registered!");
             }
         } catch (error) {
             return helper.response(response, 400, "Bad Request");
@@ -193,7 +198,7 @@ module.exports = {
                 const updateKey = await patchUser(setData, id);
                 return helper.response(
                     response,
-                    400,
+                    200,
                     "Success, your password has been changed"
                 );
             } else {
