@@ -123,7 +123,7 @@ module.exports = {
                         pass: "technoker2020"
                     }
                 })
-                const redirectLink = process.env.FRONTEND_LINK + 'reset-password/1/' + key
+                const redirectLink = process.env.FRONTEND_LINK + 'confirm-password?role=1&keys=' + key
                 await transporter.sendMail({
                         from: '"Technoker Team" <info.technoker@gmail.com>',
                         to: recruiter_email,

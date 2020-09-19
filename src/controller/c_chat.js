@@ -111,7 +111,7 @@ module.exports = {
     			
     			for (i = 0; i < result.length; i++) {
     				const getWorker = await getWorkerById(result[i].recruiter_id)
-    				result[i].recruiter_name = getWorker[0].recruiter_name
+    				result[i].worker_name = getWorker[0].user_name
     			}
     			return helper.response(response, 200, "Success get recruiter room chat", result)
     		} else {

@@ -133,7 +133,7 @@ module.exports = {
   forgotPassword: async (request, response) => {
     try {
       const { user_email } = request.body;
-      const keys = Math.round(Math.random() * 10000);
+      const keys = Math.round(Math.random() * 99999);
       const checkDataUser = await checkUser(user_email);
 
       if (checkDataUser.length >= 1) {
@@ -149,7 +149,7 @@ module.exports = {
           },
         });
         const redirectLink =
-          process.env.FRONTEND_LINK + "reset-password/2/" + keys;
+          process.env.FRONTEND_LINK + 'confirm-password?role=1&keys=' + keys
         await transporter.sendMail({
           from: '"Technoker Team" <info.technoker@gmail.com>',
           to: user_email,
@@ -216,15 +216,15 @@ module.exports = {
   getWorkerById: async (request, response) => {
     try {
       const { id } = request.params;
-      const result = await getWorkerByIdV2(id);
+      const result = await getWorkerById(id);
       const skills = await getWorkerSkills(id);
       const portofolio = await getPortofolioByUserId(id);
       const experience = await getExperienceById(id);
-      result[0].skills = skills;
-      result[0].portofolio = portofolio;
-      result[0].experience = experience;
 
       if (result.length > 0) {
+        result[0].skills = skills;
+        result[0].portofolio = portofolio;
+        result[0].experience = experience;
         return helper.response(
           response,
           200,
