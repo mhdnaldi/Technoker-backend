@@ -14,7 +14,7 @@ module.exports = {
 			experience_date_out == '' || experience_date_out == undefined ||
 			experience_desc == '' || experience_desc == undefined
 			) {
-			return helper.response(response, 400, "Your data is not complete", result)
+			return helper.response(response, 400, "Your data is not complete")
 		}
 		const setData = {
 			user_id,
