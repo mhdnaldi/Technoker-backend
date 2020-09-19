@@ -1,9 +1,8 @@
 const router = require("express").Router();
-// const { postPortofolio, patchPortofolio } = require('../controller/c_portofolio')
-// const { authorization } = require('../middleware/auth')
-// const uploadImage = require('../middleware/multer_portofolio')
+const { postExperience, deleteExperience } = require('../controller/c_experience')
+const { authorization } = require('../middleware/auth')
 
-// router.post("/", authorization, uploadImage, postPortofolio);
-// router.patch("/:id", authorization, uploadImage, patchPortofolio);
+router.post("/", authorization, postExperience);
+router.delete("/:id", authorization, deleteExperience);
 
 module.exports = router

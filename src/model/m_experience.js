@@ -16,12 +16,32 @@ module.exports = {
             })
         })
     },
-    getExperienceById: (id) => {
+    getExperienceByUserId: (id) => {
         return new Promise((resolve, reject) => {
             connection.query("SELECT * FROM experience WHERE user_id = ?", id, (error, result) => {
-                    !error ? resolve(result) : reject(new Error(error));
+                !error ? resolve(result) : reject(new Error(error));
+            });
+        })
+    },
+    getExperienceById: (id) => {
+        return new Promise((resolve, reject) => {
+            connection.query("SELECT * FROM experience WHERE experience_id = ?", id, (error, result) => {
+                !error ? resolve(result) : reject(new Error(error));
+            });
+        })
+    },
+    deleteExperienceById: (id) => {
+        return new Promise((resolve, reject) => {
+            connection.query("DELETE FROM experience WHERE experience_id = ?", id, (error, result) => {
+                if (!error) {
+                    const newResult = {
+                        experience_id: id,
+                    };
+                    resolve(newResult);
+                } else {
+                    reject(new Error(error));
                 }
-            );
+            })
         })
     },
 }
