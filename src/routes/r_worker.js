@@ -17,7 +17,7 @@ router.get("/:id", authorization, getWorkerById);
 router.get("/", authorizationRecruiter, getAllWorker);
 router.post("/login", loginUser);
 router.post("/register", registerUser);
-router.post("/forgot", forgotPassword);
+router.post("/forgot-password", forgotPassword);
 router.patch("/update-password", updatePassword);
 router.patch("/:id", upload, patchDataWorker);
 
