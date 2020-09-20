@@ -63,10 +63,10 @@ module.exports = {
                 for(i = 0; i < getMessage.length; i++) {
                 	if (getMessage[i].role == 1) {
                 		const getSender = await getRecruiterById(getMessage[i].sender_id)
-                		getMessage[i].senderName = getSender[0].recruiter_name
+                		getMessage[i].sender_name = getSender[0].recruiter_name
                 	} else {
                 		const getSender = await getWorkerById(getMessage[i].sender_id)
-                		getMessage[i].senderName = getSender[0].user_name
+                		getMessage[i].sender_name = getSender[0].user_name
                 	}
                 }
 
