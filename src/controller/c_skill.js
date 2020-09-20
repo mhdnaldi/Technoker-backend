@@ -20,7 +20,7 @@ module.exports = {
             if (checkId.length > 0) {
                 checkSkill = await checkWorkerSkill(skill_name, user_id)
                 if (checkSkill.length > 0) {
-                    return helper.response(response, 200, `The ${skill_name} skill for this user is already set`);
+                    return helper.response(response, 400, `The ${skill_name} skill for this user is already set`);
                 } else {
                     const setData = {
                         skill_name,
