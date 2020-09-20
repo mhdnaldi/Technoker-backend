@@ -1,6 +1,7 @@
 const helper = require("../helper/helper");
 const { getWorkerById } = require("../model/m_worker")
 const { getRecruiterById } = require("../model/m_recruiter")
+const { postNotification } = require("../model/m_notification")
 const { postMessage, postRoomChat, checkRoom, checkRoomById, getMessageByRoomId, getRoomByWorker, getRoomByRecruiter } = require("../model/m_chat")
 
 module.exports = {
@@ -24,6 +25,13 @@ module.exports = {
         }
 
         try {
+
+            let setNotifData = {
+                notif_subject: 'You got some message',
+                role: role == 1 ? 2 : 1,
+                user_id: role == 1 ? user_id : recruiter_id
+            }
+
             const checkRoomData = await checkRoom(user_id, recruiter_id)
             if (checkRoomData.length < 1) {
 
@@ -38,7 +46,7 @@ module.exports = {
 
                 let setMessageData = { room_id: newRoomId, role, sender_id, message_text }
                 const sendMessage = await postMessage(setMessageData)
-
+                const sendNotif = await postNotification(setNotifData)
                 const result = { postRoom, sendMessage }
                 return helper.response(response, 200, "Success create room & send message", result)
 
@@ -46,10 +54,11 @@ module.exports = {
                 const oldRoomId = checkRoomData[0].room_id
                 let setMessageData = { room_id: oldRoomId, role, sender_id, message_text }
                 const sendMessage = await postMessage(setMessageData)
+                const sendNotif = await postNotification(setNotifData)
                 return helper.response(response, 200, "Success send message", sendMessage)
             }
         } catch (e) {
-            return helper.response(response, 400, "Bad Request",e)
+            return helper.response(response, 400, "Bad Request", e)
         }
 
     },
@@ -60,14 +69,14 @@ module.exports = {
             if (result.length > 0) {
                 const getMessage = await getMessageByRoomId(id)
 
-                for(i = 0; i < getMessage.length; i++) {
-                	if (getMessage[i].role == 1) {
-                		const getSender = await getRecruiterById(getMessage[i].sender_id)
-                		getMessage[i].sender_name = getSender[0].recruiter_name
-                	} else {
-                		const getSender = await getWorkerById(getMessage[i].sender_id)
-                		getMessage[i].sender_name = getSender[0].user_name
-                	}
+                for (i = 0; i < getMessage.length; i++) {
+                    if (getMessage[i].role == 1) {
+                        const getSender = await getRecruiterById(getMessage[i].sender_id)
+                        getMessage[i].sender_name = getSender[0].recruiter_company
+                    } else {
+                        const getSender = await getWorkerById(getMessage[i].sender_id)
+                        getMessage[i].sender_name = getSender[0].user_name
+                    }
                 }
 
                 result[0].messages = getMessage
@@ -76,49 +85,49 @@ module.exports = {
                 return helper.response(response, 404, "Room chat is not found!")
             }
         } catch (e) {
-            return helper.response(response, 400, "Bad Request",e)
+            return helper.response(response, 400, "Bad Request", e)
         }
     },
     getWorkerRoom: async (request, response) => {
-    	const { id } = request.params
-    	
-    	try {
-    		checkWorker = await getWorkerById(id)
+        const { id } = request.params
 
-    		if (checkWorker.length > 0) {
-    			result = await getRoomByWorker(id)
-    			
-    			for (i = 0; i < result.length; i++) {
-    				const getRecruiter = await getRecruiterById(result[i].recruiter_id)
-    				result[i].sender_name = getRecruiter[0].recruiter_name
-    			}
-    			return helper.response(response, 200, "Success get worker room chat", result)
-    		} else {
-    			return helper.response(response, 404, "Worker not found")
-    		}
-    	} catch(e) {
-    		return helper.response(response, 400, "Bad Request",e);
-    	}
+        try {
+            checkWorker = await getWorkerById(id)
+
+            if (checkWorker.length > 0) {
+                result = await getRoomByWorker(id)
+
+                for (i = 0; i < result.length; i++) {
+                    const getRecruiter = await getRecruiterById(result[i].recruiter_id)
+                    result[i].room_name = getRecruiter[0].recruiter_company
+                }
+                return helper.response(response, 200, "Success get worker room chat", result)
+            } else {
+                return helper.response(response, 404, "Worker not found")
+            }
+        } catch (e) {
+            return helper.response(response, 400, "Bad Request", e);
+        }
     },
     getRecruiterRoom: async (request, response) => {
-    	const { id } = request.params
-    	
-    	try {
-    		checkRecruiter = await getRecruiterById(id)
+        const { id } = request.params
 
-    		if (checkRecruiter.length > 0) {
-    			result = await getRoomByRecruiter(id)
-    			
-    			for (i = 0; i < result.length; i++) {
-    				const getWorker = await getWorkerById(result[i].recruiter_id)
-    				result[i].sender_name = getWorker[0].user_name
-    			}
-    			return helper.response(response, 200, "Success get recruiter room chat", result)
-    		} else {
-    			return helper.response(response, 404, "Recruiter not found")
-    		}
-    	} catch(e) {
-    		return helper.response(response, 400, "Bad Request",e);
-    	}
+        try {
+            checkRecruiter = await getRecruiterById(id)
+
+            if (checkRecruiter.length > 0) {
+                result = await getRoomByRecruiter(id)
+
+                for (i = 0; i < result.length; i++) {
+                    const getWorker = await getWorkerById(result[i].recruiter_id)
+                    result[i].room_name = getWorker[0].user_name
+                }
+                return helper.response(response, 200, "Success get recruiter room chat", result)
+            } else {
+                return helper.response(response, 404, "Recruiter not found")
+            }
+        } catch (e) {
+            return helper.response(response, 400, "Bad Request", e);
+        }
     },
 }
