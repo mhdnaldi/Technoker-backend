@@ -181,7 +181,7 @@ module.exports = {
     },
     patchRecruiter: async (request, response) => {
         const { id } = request.params
-        const { recruiter_company, recruiter_field, recruiter_location, recruiter_about, recruiter_email, recruiter_instagram, recruiter_phone, recruiter_linkedin } = request.body
+        const { recruiter_company, recruiter_field, recruiter_location, recruiter_about, recruiter_instagram, recruiter_phone, recruiter_linkedin } = request.body
         const recruiter_profile_image = request.file
         try {
             if (
@@ -189,9 +189,7 @@ module.exports = {
                 recruiter_field == '' || recruiter_field == undefined ||
                 recruiter_location == '' || recruiter_location == undefined ||
                 recruiter_about == '' || recruiter_about == undefined ||
-                recruiter_email == '' || recruiter_email == undefined ||
                 recruiter_instagram == '' || recruiter_instagram == undefined ||
-                recruiter_email == '' || recruiter_email == undefined ||
                 recruiter_phone == '' || recruiter_phone == undefined
             ) {
                 return helper.response(response, 400, "The data you've entered is not complete!")
@@ -201,7 +199,6 @@ module.exports = {
                 recruiter_field,
                 recruiter_location,
                 recruiter_about,
-                recruiter_email,
                 recruiter_instagram,
                 recruiter_phone,
                 recruiter_linkedin
