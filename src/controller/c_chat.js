@@ -90,7 +90,7 @@ module.exports = {
     			
     			for (i = 0; i < result.length; i++) {
     				const getRecruiter = await getRecruiterById(result[i].recruiter_id)
-    				result[i].recruiter_name = getRecruiter[0].recruiter_name
+    				result[i].sender_name = getRecruiter[0].recruiter_name
     			}
     			return helper.response(response, 200, "Success get worker room chat", result)
     		} else {
@@ -111,11 +111,11 @@ module.exports = {
     			
     			for (i = 0; i < result.length; i++) {
     				const getWorker = await getWorkerById(result[i].recruiter_id)
-    				result[i].worker_name = getWorker[0].user_name
+    				result[i].sender_name = getWorker[0].user_name
     			}
     			return helper.response(response, 200, "Success get recruiter room chat", result)
     		} else {
-    			return helper.response(response, 404, "Worker not found")
+    			return helper.response(response, 404, "Recruiter not found")
     		}
     	} catch(e) {
     		return helper.response(response, 400, "Bad Request",e);
