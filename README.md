@@ -1,7 +1,7 @@
 <h1 align="center">ExpressJS - Technoker RESTfull API</h1>
 
 
-Technoker is
+Technoker is a job seeker website and we built this backend with Node JS and Express JS.
 [More about Express](https://en.wikipedia.org/wiki/Express.js)
 
 ## Built With
@@ -45,4 +45,69 @@ FRONTEND_LINK=..
 Check Postman documetation here https://documenter.getpostman.com/view/12631524/TVKBYJ1S#2f2e14c5-d4c4-455a-b70b-238518a7f521
 
 ## End Point
+**1. GET**
+
+- `/user` (Get all worker)
+
+  - `{ "orderBy": "user_id", "limit": 5, "page" : 1 }`
+
+- `/user/search` (Get worker by name)
+
+  - `{ "name": "naldi" }`
+
+- `/user/:id` (Get worker by id)
+
+- `/recruiter/:id` (Get recruiter by id)
+
+- `/notification/:role/:id` (Get notification by user)
+
+- `/notification/unread/:role/:id` (Get count notif)
+
+- `/chat/user/:id` (Get worker room)
+
+- `/chat/recruiter/:id` (Get recruiter room)
+
+- `/chat/:id` (Get room by id)
+
+  - `{ "page": 1, "limit": 3, "sort" : "history_created_at ASC" }`
+
+**2. POST**
+
+- `/user/login` (Login worker)
+
+  - `{ "user_email": "email@example.com", "user_password": "12345678"}`
+
+- `/user/register` (Register worker)
+
+  - `{ "user_name": "Jenifer Kim", "user_email": "jenifer@gmail.com", "user_phone": 081356713178, "user_password": "jenifer12345", "user_confirm_password": "jenifer12345" }`
+
+- `/user/forgot-password` (Forgot password worker)
+
+  - `{ "orders": [{ "product_id": 1, "qty": 2 }, { "product_id": 7, "qty": 2 }] }`
+
+- `/users/register` (Post User Register)
+
+  - `{ "user_email": "arizal123@gmail.com", "user_password": "12345678", "user_name": "arizal123" }`
+
+- `/users/login` (Post User Login)
+  - `{ "user_email": "arizal123@gmail.com", "user_password": "12345678" }`
+
+**3. PATCH**
+
+- `/product/:id` (Update product by id)
+
+  - `{"product_name" : "Lemon Tea", "category_id" : 2, "product_harga" : 12000, "product_status" : 1 | 0}`
+
+- `/category/:id` (Update category by id)
+
+  - `{ "category_name": "Noodles" }`
+
+- `/users/:id` (Update user by id)
+  - `{ "user_name": "arizal321", "user_role": 1 | 2, "user_status": 0 | 1 }`
+
+**4. DELETE**
+
+- `/product/:id` (Delete product by id)
+
+- `/category/:id` (Delete category by id)
 ...
