@@ -164,4 +164,15 @@ module.exports = {
       );
     });
   },
+  updateSkillWorker: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "UPDATE user SET user_skill = user_skill+1 WHERE user_id = ?",
+        id,
+        (error, result) => {
+          !error ? resolve(result) : reject(new Error(error));
+        }
+      );
+    });
+  },
 };

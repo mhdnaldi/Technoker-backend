@@ -20,7 +20,7 @@ const {
 
 const { getWorkerSkills } = require("../model/m_skill");
 const { getPortofolioByUserId } = require("../model/m_portofolio");
-const { getExperienceById } = require("../model/m_experience");
+const { getExperienceByUserId } = require("../model/m_experience");
 const nodemailer = require("nodemailer");
 
 module.exports = {
@@ -219,7 +219,7 @@ module.exports = {
       const result = await getWorkerById(id);
       const skills = await getWorkerSkills(id);
       const portofolio = await getPortofolioByUserId(id);
-      const experience = await getExperienceById(id);
+      const experience = await getExperienceByUserId(id);
 
       if (result.length > 0) {
         result[0].skills = skills;

@@ -2,10 +2,9 @@ const helper = require("../helper/helper");
 const {
   postSkill,
   deleteSkill,
-  getWorkerSkills,
   checkWorkerSkill,
 } = require("../model/m_skill");
-const { getWorkerById, patchDataWorker } = require("../model/m_worker");
+const { getWorkerById, updateSkillWorker } = require("../model/m_worker");
 
 module.exports = {
   postSkill: async (request, response) => {
@@ -33,11 +32,8 @@ module.exports = {
             skill_name,
             user_id,
           };
-          const setData2 = {
-            user_skill: +1,
-          };
           const result = await postSkill(setData);
-          const updateSkill = await patchDataWorker(setData2, user_id);
+          const updateSkill = await updateSkillWorker(user_id);
           return helper.response(response, 200, "Success post skill", result);
         }
       } else {
@@ -48,8 +44,7 @@ module.exports = {
         );
       }
     } catch (error) {
-      console.log(error);
-      //   return helper.response(response, 400, "Bad request");
+      return helper.response(response, 400, "Bad request");
     }
   },
   deleteSkill: async (request, response) => {
