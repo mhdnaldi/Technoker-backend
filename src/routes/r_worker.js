@@ -19,6 +19,6 @@ router.post("/login", loginUser);
 router.post("/register", registerUser);
 router.post("/forgot-password", forgotPassword);
 router.patch("/update-password", updatePassword);
-router.patch("/:id", upload, patchDataWorker);
+router.patch("/:id", authorization, upload, patchDataWorker);
 
 module.exports = router;
