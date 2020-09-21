@@ -124,7 +124,7 @@ Check Postman documetation here https://documenter.getpostman.com/view/12631524/
   - `{ "user_name": "Selena Gemez", "user_image": "selena.jpg", "user_phone": 08132345678, "user_job_desk": "Devops Engineer", "user_location": "Surabaya, Indonesia", "user_workplace": "Jakarta, Indonesia", "user_about": "Lorem, ipsum dolor sit amet consectetur adipisicing, elit.", "user_instagram": "instagram.com/gemez", "user_github": "github.com/gemez" }`
 
 - `/recruiter/update-password` (Update password recruiter)
-  - `{ "recruiter_key": "0000", "recruiter_password": "password123", "recruiter_password_confirmation": "password123" }`
+  - `{ "recruiter_key": 0000, "recruiter_password": "password123", "recruiter_password_confirmation": "password123" }`
   
 - `/recruiter/:id` (Edit data recruiter)
   - `{ "recruiter_profile_image": "preview.jpg", "recruiter_company": "Microsoft Inc.", "recruiter_field": "Software House", "recruiter_location": California, US", "recruiter_about": "Lorem, ipsum dolor sit amet consectetur adipisicing, elit.", "recruiter_email": "example@mail.com", "recruiter_instagram": "instagram.com/microsoft", "recruiter_phone": 08132345678, "recruiter_linkedin": "linkedin.com/microsoft" }`
