@@ -119,7 +119,7 @@ module.exports = {
                 result = await getRoomByRecruiter(id)
 
                 for (i = 0; i < result.length; i++) {
-                    const getWorker = await getWorkerById(result[i].recruiter_id)
+                    const getWorker = await getWorkerById(result[i].user_id)
                     result[i].room_name = getWorker[0].user_name
                 }
                 return helper.response(response, 200, "Success get recruiter room chat", result)
