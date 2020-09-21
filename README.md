@@ -83,31 +83,58 @@ Check Postman documetation here https://documenter.getpostman.com/view/12631524/
 
 - `/user/forgot-password` (Forgot password worker)
 
-  - `{ "orders": [{ "product_id": 1, "qty": 2 }, { "product_id": 7, "qty": 2 }] }`
+  - `{ "user_email": "mail@example.com" }`
+  
+- `/skill` (Post skill)
 
-- `/users/register` (Post User Register)
+  - `{ "skill_name": "ExpressJS", "user_id": 1 }`
+  
+- `/recruiter/register` (Create recruiter account)
 
-  - `{ "user_email": "arizal123@gmail.com", "user_password": "12345678", "user_name": "arizal123" }`
+  - `{ "recruiter_name": "Jenny Doe", "recruiter_email": "jennydoe@mail.com", "recruiter_company": "Microsoft Inc.", "recruiter_position": "HRD", "recruiter_phone": 0812345678, "recruiter_password": "jennydoe", "recruiter_password_confirmation": "jennydoe" }`
+  
+- `/recruiter/login` (Login recruiter)
 
-- `/users/login` (Post User Login)
-  - `{ "user_email": "arizal123@gmail.com", "user_password": "12345678" }`
+  - `{ "recruiter_email": "mail@example.com", "recruiter_password": "microsoft" }`
+  
+- `/recruiter/forgot-password` (Forgot password recruiter)
+
+  - `{ "recruiter_email": "mail@example.com" }`
+  
+- `/portofolio` (Post portofolio)
+
+  - `{ "user_id": 1, "portofolio_name": "Analyc", "portofolio_image": "preview.jpg", "portofolio_type": 1, "portofolio_repository": "github.com/abc/analyc" }`
+  
+- `/experience` (Post experience)
+
+  - `{ "user_id": 1, "experience_company": "Bukalapak", "experience_position": "Backend Developer", "experience_date_in": "December 2018", "experience_date_out": "January 2020", "experience_desc": "Lorem, ipsum dolor sit amet consectetur adipisicing, elit. "}`
+  
+- `/chat` (Post chat)
+
+  - `{ "role": 1, "sender_id": 7, "message_text": "haloo" }`
 
 **3. PATCH**
 
-- `/product/:id` (Update product by id)
+- `/user/update-password` (Update password worker)
 
-  - `{"product_name" : "Lemon Tea", "category_id" : 2, "product_harga" : 12000, "product_status" : 1 | 0}`
+  - `{ "user_key": 101010, "user_password": password123 }`
 
-- `/category/:id` (Update category by id)
+- `/user/:id` (Update data worker)
 
-  - `{ "category_name": "Noodles" }`
+  - `{ "user_name": "Selena Gemez", "user_image": "selena.jpg", "user_phone": 08132345678, "user_job_desk": "Devops Engineer", "user_location": "Surabaya, Indonesia", "user_workplace": "Jakarta, Indonesia", "user_about": "Lorem, ipsum dolor sit amet consectetur adipisicing, elit.", "user_instagram": "instagram.com/gemez", "user_github": "github.com/gemez" }`
 
-- `/users/:id` (Update user by id)
-  - `{ "user_name": "arizal321", "user_role": 1 | 2, "user_status": 0 | 1 }`
-
+- `/recruiter/update-password` (Update password recruiter)
+  - `{ "recruiter_key": 0000, "recruiter_password": "password123", "recruiter_password_confirmation": "password123" }`
+  
+- `/recruiter/:id` (Edit data recruiter)
+  - `{ "recruiter_profile_image": "preview.jpg", "recruiter_company": "Microsoft Inc.", "recruiter_field": "Software House", "recruiter_location": California, US", "recruiter_about": "Lorem, ipsum dolor sit amet consectetur adipisicing, elit.", "recruiter_email": "example@mail.com", "recruiter_instagram": "instagram.com/microsoft", "recruiter_phone": 08132345678, "recruiter_linkedin": "linkedin.com/microsoft" }`
+  
 **4. DELETE**
 
-- `/product/:id` (Delete product by id)
+- `/skill/:id` (Delete skill by id)
 
-- `/category/:id` (Delete category by id)
+- `/portofolio/:id` (Delete portofolio by id)
+
+- `/experience/:id` (Delete experience by id)
+
 ...
