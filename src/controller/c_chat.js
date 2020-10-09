@@ -73,9 +73,12 @@ module.exports = {
                     if (getMessage[i].role == 1) {
                         const getSender = await getRecruiterById(getMessage[i].sender_id)
                         getMessage[i].sender_name = getSender[0].recruiter_company
+                        getMessage[1].sender_img = getSender[0].recruiter_profile_image;
                     } else {
                         const getSender = await getWorkerById(getMessage[i].sender_id)
                         getMessage[i].sender_name = getSender[0].user_name
+                        getMessage[i].sender_img = getSender[0].user_image
+
                     }
                 }
 
@@ -100,6 +103,7 @@ module.exports = {
                 for (i = 0; i < result.length; i++) {
                     const getRecruiter = await getRecruiterById(result[i].recruiter_id)
                     result[i].room_name = getRecruiter[0].recruiter_company
+                    result[i].image = getRecruiter[0].recruiter_profile_image
                 }
                 return helper.response(response, 200, "Success get worker room chat", result)
             } else {
@@ -121,6 +125,7 @@ module.exports = {
                 for (i = 0; i < result.length; i++) {
                     const getWorker = await getWorkerById(result[i].recruiter_id)
                     result[i].room_name = getWorker[0].user_name
+                    result[i].image = getWorker[0].user_image
                 }
                 return helper.response(response, 200, "Success get recruiter room chat", result)
             } else {
