@@ -18,7 +18,7 @@ module.exports = {
             recruiter_password == '' || recruiter_password == undefined ||
             recruiter_password_confirmation == '' || recruiter_password_confirmation == undefined
         ) {
-            return helper.response(response, 403, "The data you've entered is not complete!")
+            return helper.response(response, 400, "The data you've entered is not complete!")
         }
 
         const salt = bcrypt.genSaltSync(10)
@@ -26,20 +26,20 @@ module.exports = {
         const email_validation = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
         if (email_validation.test(recruiter_email) == false) {
-            return helper.response(response, 403, "Your email is not valid")
+            return helper.response(response, 400, "Your email is not valid")
         }
 
         try {
             const check = await checkRecruiter(recruiter_email)
 
             if (check.length > 0) {
-                return helper.response(response, 403, "This email already rigistered ")
+                return helper.response(response, 400, "This email already rigistered ")
 
             } else if (recruiter_password.length < 7 || recruiter_password.length > 20) {
-                return helper.response(response, 403, "Password must be between 8 to 20 characters")
+                return helper.response(response, 400, "Password must be between 8 to 20 characters")
 
             } else if (recruiter_password_confirmation !== recruiter_password) {
-                return helper.response(response, 403, "Your password confirmation is wrong")
+                return helper.response(response, 400, "Your password confirmation is wrong")
 
             } else {
                 setData = {
@@ -63,7 +63,7 @@ module.exports = {
             recruiter_email == '' || recruiter_email == undefined ||
             recruiter_password == '' || recruiter_password == undefined
         ) {
-            return helper.response(response, 403, "The data you've entered is not complete!")
+            return helper.response(response, 400, "The data you've entered is not complete!")
         }
         try {
             const checkData = await checkRecruiter(recruiter_email)
@@ -125,15 +125,15 @@ module.exports = {
                 })
                 const redirectLink = process.env.FRONTEND_LINK + 'confirm-password?role=1&keys=' + key
                 await transporter.sendMail({
-                        from: '"Technoker Team" <info.technoker@gmail.com>',
-                        to: recruiter_email,
-                        subject: "Technoker - Forgot Password",
-                        html: `
+                    from: '"Technoker Team" <info.technoker@gmail.com>',
+                    to: recruiter_email,
+                    subject: "Technoker - Forgot Password",
+                    html: `
                         Click link bellow for redirect to change password page <br /> <a href="${redirectLink}">Click Here</a> 
                         <p> Or copy this link ${redirectLink} </p>
                         `
-                    }),
-                    function(err) {
+                }),
+                    function (err) {
                         if (err) {
                             return helper.response(response, 400, "Email not send !")
                         }
@@ -155,7 +155,7 @@ module.exports = {
         try {
 
             if (recruiter_password.length < 7 || recruiter_password.length > 20) {
-                return helper.response(response, 403, "Password must be between 8 to 20 characters")
+                return helper.response(response, 400, "Password must be between 8 to 20 characters")
             } else if (recruiter_password !== recruiter_password_confirmation) {
                 return helper.response(response, 400, "Your password don't match!")
             }
@@ -213,7 +213,7 @@ module.exports = {
                     setData.recruiter_profile_image = recruiter_profile_image.filename
                     const image = checkData[0].recruiter_profile_image
                     if (image !== null) {
-                        fs.unlink(`./uploads/profile/${image}`, function(err) {
+                        fs.unlink(`./uploads/profile/${image}`, function (err) {
                             if (err) throw err;
                         })
                     }
