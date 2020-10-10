@@ -150,7 +150,7 @@ module.exports = {
           },
         });
         const redirectLink =
-          process.env.FRONTEND_LINK + 'confirm-password?role=1&keys=' + keys
+          process.env.FRONTEND_LINK + 'confirm-password?role=2&keys=' + keys
         await transporter.sendMail({
           from: '"Technoker Team" <info.technoker@gmail.com>',
           to: user_email,

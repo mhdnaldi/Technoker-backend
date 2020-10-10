@@ -4,9 +4,11 @@ const { getNotifByUser, getCountNotifi, updateNotifStatus } = require("../model/
 module.exports = {
 	getNotifByUser: async (request, response) => {
 		const { role, id } = request.params
+		let { limit } = request.query
+		limit = limit == undefined || limit == '' ? 7 : parseInt(limit)
 		try {
 			updateStatus = await updateNotifStatus(role, id) 
-			result = await getNotifByUser(role, id)
+			result = await getNotifByUser(role, id, limit)
 			return helper.response(response, 200, "Success get notificatin", result)
 		} catch(e) {
 			return helper.response(response, 400, "Bad Request")
