@@ -72,7 +72,8 @@ module.exports = {
         return helper.response(response, 200, "Register Success", result);
       }
     } catch (error) {
-      return helper.response(response, 200, "Bad Request");
+      console.log(error)
+      return helper.response(response, 400, "Bad Request");
     }
   },
   loginUser: async (request, response) => {
@@ -369,10 +370,10 @@ module.exports = {
           result
         );
       } else {
-        return helper.response(response, 404, "Worker not found!");
+        return helper.response(response, 400, "Worker not found!");
       }
     } catch (error) {
-      return helper.response(response, 200, "Bad request", error);
+      return helper.response(response, 400, "Bad request", error);
     }
   },
 };
