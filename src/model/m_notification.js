@@ -1,9 +1,9 @@
 const connection = require("../config/mysql");
 
 module.exports = {
-    getNotifByUser: (role, id) => {
+    getNotifByUser: (role, id, limit) => {
         return new Promise((resolve, reject) => {
-            connection.query("SELECT * FROM notification WHERE role = ? AND user_id = ? ORDER BY notif_created_at DESC", [role, id], (error, result) => {
+            connection.query("SELECT * FROM notification WHERE role = ? AND user_id = ? ORDER BY notif_created_at DESC LIMIT ?", [role, id, limit], (error, result) => {
                 !error ? resolve(result) : reject(new Error(error));
             })
         })
