@@ -29,7 +29,6 @@ module.exports = {
             let sender_name = ''
             if (role == 1) {
                 const getSender = await getRecruiterById(recruiter_id)
-                console.log(getSender)
                 if (getSender.length > 0) {
                     sender_name = getSender[0].recruiter_company
                 } else {
@@ -90,7 +89,7 @@ module.exports = {
                     if (getMessage[i].role == 1) {
                         const getSender = await getRecruiterById(getMessage[i].sender_id)
                         getMessage[i].sender_name = getSender[0].recruiter_company
-                        getMessage[1].sender_img = getSender[0].recruiter_profile_image;
+                        getMessage[i].sender_img = getSender[0].recruiter_profile_image;
                     } else {
                         const getSender = await getWorkerById(getMessage[i].sender_id)
                         getMessage[i].sender_name = getSender[0].user_name
