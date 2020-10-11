@@ -40,9 +40,9 @@ module.exports = {
         portofolio_repository,
       };
       const result = await postPortofolio(setData);
-      console.log(result);
       return helper.response(response, 201, "Success post portofolio", result);
     } catch (e) {
+      console.log(e)
       return helper.response(response, 400, "Bad request", e);
     }
   },
