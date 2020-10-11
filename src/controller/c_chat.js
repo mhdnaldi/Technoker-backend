@@ -26,15 +26,32 @@ module.exports = {
 
         try {
 
+            let sender_name = ''
+            if (role == 1) {
+                const getSender = await getRecruiterById(recruiter_id)
+                console.log(getSender)
+                if (getSender.length > 0) {
+                    sender_name = getSender[0].recruiter_company
+                } else {
+                    return helper.response(response, 404, `Recruiter with ID ${recruiter_id} is not found`)
+                }
+            } else {
+                const getSender = await getWorkerById(user_id)
+                if (getSender.length > 0) {
+                    sender_name = getSender[0].user_name
+                } else {
+                    return helper.response(response, 404, `Worker with ID ${user_id} is not found`)
+                }
+            }
+
             let setNotifData = {
-                notif_subject: 'You got some message',
+                notif_subject: `You got some message from ${sender_name}`,
                 role: role == 1 ? 2 : 1,
                 user_id: role == 1 ? user_id : recruiter_id
             }
 
             const checkRoomData = await checkRoom(user_id, recruiter_id)
             if (checkRoomData.length < 1) {
-
                 const random = Math.round(Math.random() * 99999);
                 const newRoomId = random + new Date().getTime()
                 let setRoomData = {
