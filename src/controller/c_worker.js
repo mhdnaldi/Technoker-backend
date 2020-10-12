@@ -308,6 +308,7 @@ module.exports = {
         return helper.response(response, 404, `Worker by Id ${id} not found!`);
       }
     } catch (error) {
+      console.log(error)
       return helper.response(response, 400, "Bad Request");
     }
   },
